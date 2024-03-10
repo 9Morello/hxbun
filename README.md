@@ -10,7 +10,7 @@ This WIP haxelib includes mostly hand-written externs for [Bun](https://bun.sh/)
 You can optionally use it together with [hxnodejs](https://github.com/HaxeFoundation/hxnodejs). Bun implements the majority of Node's APIs and most
 code that uses `hxnodejs` externs should just work too.
 
-This haxelib has been tested on GNU/Linux. It should work normally on macOS. Windows `may` work once Bun officially supports it, but using WSL is preferred.
+This haxelib has been tested on GNU/Linux. It should work normally on macOS. Windows *may* work once Bun officially supports it, but using WSL is preferred.
 
 Credits:
 
