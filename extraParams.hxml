@@ -1,0 +1,5 @@
+--macro bun.Macro.init()
+-lib result
+-lib result-tools
+-lib option-tools
+-lib datetime

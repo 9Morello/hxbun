@@ -1,0 +1,19 @@
+-lib utest
+-lib hxnodejs
+-lib result
+-lib result-tools
+-lib option-tools
+-lib tink_validation
+-lib datetime
+-lib record-macros
+-lib compiletime
+--macro bun.Macro.init()
+-cp src
+-cp tests
+-D analyzer-optimize
+--dce full
+-main tests.TestAll
+--js out/main.js
+--cmd MYENV=TEST bun out/main.js
+-D js-es=6
+-D haxe-next
