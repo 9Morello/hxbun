@@ -4,9 +4,9 @@
     "license": "MIT",
     "tags": ["javascript", "server", "extern", "http", "web"],
     "description": "Experimental externs for Bun, a JavaScript runtime.",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "classPath": "src/",
-    "releasenote": "Initial release",
+    "releasenote": "fix missing dependency",
     "contributors": ["gravityWall"],
-    "dependencies": { "result": "", "result-tools": "", "option-tools": "" }
+    "dependencies": { "result": "", "result-tools": "", "option-tools": "", "datetime": "" }
 }
