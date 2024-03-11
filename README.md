@@ -47,7 +47,7 @@ You can also install releases from [Haxelib](https://lib.haxe.org/):
 
 ## Usage
 
-This library offers a top-level `Bun` class, which contains general purpose utilities, and a few classes inside the `bun` package.
+Just add `-lib hxbun` to your .hxml file and you're ready to go.
 
 ### Spinning up a web server
 
