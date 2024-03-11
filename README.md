@@ -41,7 +41,7 @@ Then, you can install this library directly from Git:
 
 `haxelib git hxbun https://github.com/9Morello/hxbun`
 
-You can also a release from [Haxelib](https://lib.haxe.org/):
+You can also install releases from [Haxelib](https://lib.haxe.org/):
 
 `haxelib install hxbun`
 
