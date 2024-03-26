@@ -1,37 +1,54 @@
 package bun;
 
-import js.lib.ArrayBufferView;
-import js.html.Blob;
-import js.lib.ArrayBuffer;
-import js.html.URL;
 import haxe.extern.EitherType;
+import js.html.Blob;
+import js.html.URL;
+import js.lib.ArrayBuffer;
+import js.lib.ArrayBufferView;
 
 /**
- * A client that makes an outgoing WebSocket connection.
- */
-extern class WebSocketServer<T> {
+	An enum representing the current state of the WebSocket.
+**/
+enum abstract ReadyState(Int) from Int {
+	final CONNECTING;
+	final OPEN;
+	final CLOSING;
+	final CLOSED;
+}
+
+/**
+ * A server-side WebSocket created by an incoming connection from a client.
+**/
+extern class ServerWebSocket<T> {
+	/**
+		The current state of the websocket.
+	**/
+	public var readyState(default, never):ReadyState;
+
 	private function new();
 
 	/**
 	 * Sends data to the connected WebSocket.
 	 * @param data The data to be sent. Can be either a `String`, an `ArrayBuffer`, a `Blob` or a `TypedArray`.
-	 */
-	overload public function send(data:EitherType<EitherType<String, ArrayBuffer>, EitherType<Blob, ArrayBufferView>>):Void;
+	 * Returns the amount of bytes sent. If you send data and this functions returns `0`, the WebSocket
+	 * is likely closed. 
+	**/
+	overload public function send(data:EitherType<EitherType<String, ArrayBuffer>, EitherType<Blob, ArrayBufferView>>):Int;
 
 	/**
 	 * Sends data to the connected WebSocket.
 	 * @param bytes The data to be sent (as `Bytes`).
-	 */
-	public inline function sendBytes(bytes:haxe.io.Bytes):Void {
-		send(bytes.getData());
+	**/
+	public inline function sendBytes(bytes:haxe.io.Bytes):Int {
+		return send(bytes.getData());
 	};
 
 	/**
 	 * Sends data to the connected WebSocket.
 	 * @param bytes The data to be sent (as `String`).
-	 */
-	public inline function sendString(data:String):Void {
-		send(data);
+	**/
+	public inline function sendString(data:String):Int {
+		return send(data);
 	};
 
 	public var data(default, never):T;
@@ -42,7 +59,7 @@ extern class WebSocketServer<T> {
 	 * the message's content. Every connected WebSocket that is subscribed to that topic 
 	 * will receive the published message. 
 	 * @param topic The topic you're subscribing to.
-	 */
+	**/
 	public function subscribe(topic:String):Void;
 
 	/**

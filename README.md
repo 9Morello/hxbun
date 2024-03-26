@@ -172,7 +172,7 @@ The `websocket` property receives an object with up to four function handlers:
 WebSocket servers accept type parameters, and you can attach relevant data to each connection. To do that, pass a structure as the second argument to the `server.upgrade` call, and add the apropriate type parameters:
 
 ```haxe
-import bun.WebSocketServer;
+import bun.ServerWebSocket;
 import Bun.Server;
 import js.html.Request;
 import js.lib.Date;
@@ -198,7 +198,7 @@ class Main {
 				open: function(ws) {
 					ws.sendString('Hi, from bun server!');
 				},
-				message: function(ws:WebSocketServer<WebSocketData>, msg) {
+				message: function(ws:ServerWebSocket<WebSocketData>, msg) {
 					trace('Date this connection was made: ${ws.data.createdAt}');
 					trace('Message received in bun server: ' + msg);
 				}

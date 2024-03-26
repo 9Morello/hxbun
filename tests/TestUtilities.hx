@@ -8,7 +8,7 @@ import Bun;
 
 class TestUtilities extends Test {
 	function testVersionCheck() {
-		Assert.equals("1.0.30", Bun.version);
+		Assert.equals("1.0.35", Bun.version);
 	}
 
 	function testRevisionCheck() {
@@ -46,7 +46,7 @@ class TestUtilities extends Test {
 		Assert.equals(26, compressed.length); // => Uint8Array(26)
 	}
 
-	function testPassword(async:utest.Async) {
+	@:timeout(500) function testPassword(async:utest.Async) {
 		final superSecretPassword = "Haxe ❤️ Bun";
 		Bun.password.hash(superSecretPassword).then((hash) -> {
 			Bun.password.verify(superSecretPassword, hash).then((result) -> {

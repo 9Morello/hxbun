@@ -51,6 +51,6 @@ class TestSqliteResultSet extends SqliteSetup {
 		var result = cnx.request('SELECT * FROM test ORDER BY id');
 		equals('1', result.getResult(0));
 		equals(1, result.getIntResult(0));
-		equals(1, result.getFloatResult(0));
+		equals(1.0, result.getFloatResult(0));
 	}
 }

@@ -32,7 +32,7 @@ class TestSqliteConnection extends SqliteSetup {
 	}
 
 	function testIssue9700() {
-		var dbFile = 'temp/db.sqlite';
+		var dbFile = 'tests/db.sqlite';
 		try
 			sys.FileSystem.deleteFile(dbFile)
 		catch (_) {}

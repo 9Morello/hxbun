@@ -462,10 +462,10 @@ interface Server<T = Any> {
  * A structure containing functions that handle WebSocket events.
 **/
 typedef WebSocketHandler<T> = {
-	?message:(ws:bun.WebSocketServer<T>, message:EitherType<String, BytesData>) -> Void,
-	?open:(ws:bun.WebSocketServer<T>) -> Void,
-	?close:(ws:bun.WebSocketServer<T>, code:Int, reason:String) -> Void,
-	?drain:(ws:bun.WebSocketServer<T>) -> Void,
+	?message:(ws:bun.ServerWebSocket<T>, message:EitherType<String, BytesData>) -> Void,
+	?open:(ws:bun.ServerWebSocket<T>) -> Void,
+	?close:(ws:bun.ServerWebSocket<T>, code:Int, reason:String) -> Void,
+	?drain:(ws:bun.ServerWebSocket<T>) -> Void,
 }
 
 /**

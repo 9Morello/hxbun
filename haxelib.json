@@ -4,9 +4,9 @@
     "license": "MIT",
     "tags": ["javascript", "server", "extern", "http", "web"],
     "description": "Experimental externs for Bun, a JavaScript runtime.",
-    "version": "0.0.2",
+    "version": "0.1.0",
     "classPath": "src/",
-    "releasenote": "fix missing dependency",
+    "releasenote": "rename server-side WebSocket class, exposes more fields/returns from Bun",
     "contributors": ["gravityWall"],
     "dependencies": { "result": "", "result-tools": "", "option-tools": "", "datetime": "" }
 }
