@@ -466,6 +466,7 @@ typedef WebSocketHandler<T> = {
 	?open:(ws:bun.ServerWebSocket<T>) -> Void,
 	?close:(ws:bun.ServerWebSocket<T>, code:Int, reason:String) -> Void,
 	?drain:(ws:bun.ServerWebSocket<T>) -> Void,
+	?idleTimeout:Int,
 }
 
 /**
