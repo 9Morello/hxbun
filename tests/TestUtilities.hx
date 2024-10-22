@@ -8,7 +8,7 @@ import Bun;
 
 class TestUtilities extends Test {
 	function testVersionCheck() {
-		Assert.equals("1.0.35", Bun.version);
+		Assert.equals("1.1.33", Bun.version);
 	}
 
 	function testRevisionCheck() {
