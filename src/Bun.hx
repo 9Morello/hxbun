@@ -369,52 +369,59 @@ typedef ServeOptions<T> = {
 	/**
 	 * The `fetch` function receives a `Request` and it must return a `Response`, which is forwarded to the client.
 	 */
-	fetch:EitherType<(Request) -> Null<EitherType<Response, Promise<Response>>>, (Request, Server<T>) -> Null<EitherType<Response, Promise<Response>>>>,
+	var fetch:EitherType<(Request) -> Null<EitherType<Response, Promise<Response>>>, (Request, Server<T>) -> Null<EitherType<Response, Promise<Response>>>>;
 
 	/**
 	 * The hostname which the server will listen on. Defaults to "0.0.0.0".
 	 */
-	?hostname:String,
+	var ?hostname:String;
 
 	/**
 	 * The port which the server will listen on. Defaults to 3000.
 	 */
-	?port:Int,
+	var ?port:Int;
 
 	/**
 	 * Controls whether the development mode is enabled or not. By default, development mode is __enabled__, unless the `NODE_ENV` enviroment variable is set to `production`.
 	 * In development mode, Bun will surface errors in-browser with a built-in error page.
 	 */
-	?development:Bool,
+	var ?development:Bool;
 
 	/**
 	 * Optional handler function to send a custom response to clients when a server-side error happens.
 	 */
-	?error:(Error) -> EitherType<Response, Promise<Response>>,
+	var ?error:(Error) -> EitherType<Response, Promise<Response>>;
 
 	/**
 	 * You can enable TLS by passing in a value for key and cert; both are required to enable TLS.
 	 * The key and cert fields expect __the contents__ of your TLS key and certificate, _not a path to it_.
 	 */
-	?tls:{?key:String, ?cert:String},
-	?ca:String,
-	?passphrase:String,
-	?dhParamsFile:String,
-	?lowMemoryMode:Bool,
+	var ?tls:{?key:String, ?cert:String};
 
-	?websocket:WebSocketHandler<T>,
+	var ?ca:String;
+	var ?passphrase:String;
+	var ?dhParamsFile:String;
+	var ?lowMemoryMode:Bool;
+
+	var ?websocket:WebSocketHandler<T>;
 
 	/**
 	 * By default, Bun will close a WebSocket connection if it is idle for 120 seconds. 
 	 * This can be configured with the idleTimeout property. Value is in seconds.
 	 */
-	?idleTimeout:Int,
+	var ?idleTimeout:Int;
 
 	/**
 	 * Bun will close a connection if it receives a message larger than 16MB.
 	 * You can configure a custom value through this property. Value is in bytes.
 	 */
-	?maxPayloadLength:Int,
+	var ?maxPayloadLength:Int;
+
+	/**
+	 * The optional static field can hold static `Response` objects for defined routes. This is faster than
+	 * using the fetch router, as new `Response` objects don't have to be created for each request.
+	 */
+	@:native("static") var ?staticRoutes:Dynamic<Response>;
 }
 
 /**
