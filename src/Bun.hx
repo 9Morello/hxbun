@@ -157,6 +157,15 @@ import helpers.ResultPromise;
 	public static function spawnSync(commands:Array<String>):Subprocess;
 
 	/**
+	 * Starts a HTTP(S) server.
+	 * Original function from Bun.
+	 * Haxe typedefs don't support the @:native metadata. Since the `ServeOptions` typedef may have a field called `static`,
+	 * and that's a reserved word in Haxe, we wrap the original `serve` function to manually add it, if the user passes a `staticRoutes` field.
+	 * @return Server
+	**/
+	@:native("serve") static function serveOriginal<T:Any>(options:ServeOptions<T>):Server<T>;
+
+	/**
 	 * Starts a HTTP(S) server. 
 	 * 
 	 * This function's behavior is non-blocking, but the program will only close after all server instances are stopped.
@@ -164,7 +173,12 @@ import helpers.ResultPromise;
 	 * It must at least include a `fetch` handler, which receives a `Request` returns a `Response` or a `Promise<Response>`.
 	 * @return Server
 	**/
-	overload public static function serve<T:Any>(options:ServeOptions<T>):Server<T>;
+	overload public static inline function serve<T:Any>(options:ServeOptions<T>):Server<T> {
+		if (options.staticRoutes != null) {
+			js.Syntax.code("options.static = options.staticRoutes;");
+		}
+		return serveOriginal(options);
+	}
 
 	/**
 	 * Starts a HTTP(S) server. 
@@ -177,6 +191,9 @@ import helpers.ResultPromise;
 	**/
 	public static inline function serveSafe<T:Any>(options:ServeOptions<T>):Result<Server<T>, String> {
 		try {
+			if (options.staticRoutes != null) {
+				js.Syntax.code("options.static = options.staticRoutes;");
+			}
 			final server = serve(options);
 			return Ok(server);
 		} catch (e) {
