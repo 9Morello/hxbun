@@ -62,11 +62,12 @@ class Macro {
 						}
 					default:
 				}
-
-			var tmp = './tmp${Std.random(1 << 29)}.js';
-			tmp.saveContent(lines.join('\n'));
-			Compiler.includeFile(tmp);
-			onAfterGenerate(tmp.deleteFile);
+			if (lines.length > 0) {
+				var tmp = './tmp${Std.random(1 << 29)}.js';
+				tmp.saveContent(lines.join('\n'));
+				Compiler.includeFile(tmp);
+				onAfterGenerate(() -> sys.FileSystem.deleteFile(tmp));
+			}
 		});
 	}
 }
