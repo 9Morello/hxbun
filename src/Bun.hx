@@ -25,6 +25,9 @@ import helpers.ResultPromise;
 	/** An absolute path to the entrypoint of the current program **/
 	public static var main(default, never):String;
 
+	/** Returns whether the current global scope is the main thread or not. It's always `false` on Workers. **/
+	public static var isMainThread(default, never):Bool;
+
 	public static var password(default, never):Password;
 
 	/**
