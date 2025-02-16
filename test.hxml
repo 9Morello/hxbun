@@ -7,6 +7,8 @@
 -lib datetime
 -lib record-macros
 -lib compiletime
+-lib hx4compat
+-lib jsasync
 --macro bun.Macro.init()
 -cp src
 -cp tests

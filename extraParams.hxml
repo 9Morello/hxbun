@@ -3,3 +3,5 @@
 -lib result-tools
 -lib option-tools
 -lib datetime
+-lib jsasync
+-D js-es=6

@@ -1,3 +1,5 @@
+import helpers.EitherOf.EitherOf3;
+import sys.net.UdpSocket;
 import js.Syntax;
 import result.Result;
 import haxe.io.BytesData;
@@ -8,9 +10,9 @@ import js.lib.Error;
 import js.html.Request;
 import js.html.Response;
 import haxe.extern.EitherType;
-import js.lib.Promise;
 import js.lib.Uint8Array;
 import helpers.ResultPromise;
+import js.lib.Promise;
 
 /**
  * This class exposes a bunch of utility APIs from Bun.
@@ -57,7 +59,7 @@ import helpers.ResultPromise;
 	**/
 	public static function which(bin:String):Null<String>;
 
-	public static function peek<T>(promise:Promise<T>):EitherType<T, EitherType<Promise<T>, js.lib.Error>>;
+	public static function peek<T>(promise:Promise<T>):EitherOf3<T, Promise<T>, js.lib.Error>;
 
 	/**
 	 * Opens a file in your default editor.
@@ -166,7 +168,7 @@ import helpers.ResultPromise;
 	 * and that's a reserved word in Haxe, we wrap the original `serve` function to manually add it, if the user passes a `staticRoutes` field.
 	 * @return Server
 	**/
-	@:native("serve") static function serveOriginal<T:Any>(options:ServeOptions<T>):Server<T>;
+	@:native("serve") static function serveOriginal<T:Any>(options:ServeOptions<T>):BunHttpServer<T>;
 
 	/**
 	 * Starts a HTTP(S) server. 
@@ -176,7 +178,7 @@ import helpers.ResultPromise;
 	 * It must at least include a `fetch` handler, which receives a `Request` returns a `Response` or a `Promise<Response>`.
 	 * @return Server
 	**/
-	overload public static inline function serve<T:Any>(options:ServeOptions<T>):Server<T> {
+	overload public static inline function serve<T:Any>(options:ServeOptions<T>):BunHttpServer<T> {
 		if (options.staticRoutes != null) {
 			js.Syntax.code("options.static = options.staticRoutes;");
 		}
@@ -192,7 +194,7 @@ import helpers.ResultPromise;
 	 * This is a safe equivalent of `serve`. It wraps the return value of this function in a `Result` type and never throws.
 	 * @return Result<Server, Any>
 	**/
-	public static inline function serveSafe<T:Any>(options:ServeOptions<T>):Result<Server<T>, String> {
+	public static inline function serveSafe<T:Any>(options:ServeOptions<T>):Result<BunHttpServer<T>, String> {
 		try {
 			if (options.staticRoutes != null) {
 				js.Syntax.code("options.static = options.staticRoutes;");
@@ -211,7 +213,7 @@ import helpers.ResultPromise;
 	 * @param fetch A function that receives a `Request`, and returns either a `Response` or a `Promise<Response>`.
 	 * @return Server
 	**/
-	overload public static inline function serve<T:Any>(fetch:(Request) -> EitherType<Response, Promise<Response>>):Server {
+	overload public static inline function serve<T:Any>(fetch:(Request) -> EitherType<Response, Promise<Response>>):BunHttpServer {
 		return serve({fetch: fetch});
 	}
 
@@ -223,7 +225,7 @@ import helpers.ResultPromise;
 	 * @param port The port this server will listen to.
 	 * @return Server
 	**/
-	overload public static inline function serve<T:Any>(fetch:(Request) -> EitherType<Response, Promise<Response>>, port:Int):Server {
+	overload public static inline function serve<T:Any>(fetch:(Request) -> EitherType<Response, Promise<Response>>, port:Int):BunHttpServer {
 		return serve({fetch: fetch, port: port});
 	}
 
@@ -246,7 +248,7 @@ import helpers.ResultPromise;
 	 * @return Promise<Int> Return a `Promise` with the number of bytes written to the file.
 	**/
 	public static inline function write(file:EitherType<String, BunFile>, data:Any):ResultPromise<Int, FileSystemError> {
-		return writeRaw(file, data).then(number -> Ok(number), error -> Error(error));
+		return writeRaw(file, data).then(number -> Ok(number), error -> Result.Error(error));
 	};
 
 	/**
@@ -288,6 +290,19 @@ import helpers.ResultPromise;
 	public static overload inline function writeBytesData(file:EitherType<String, BunFile>, data:haxe.io.BytesData):ResultPromise<Int, FileSystemError> {
 		return write(file, data);
 	}
+
+	/**
+		Creates a bound UDP socket. If you don't specify a port number, one will be assigned
+		by the Operating System.
+	**/
+	public static overload function udpSocket(udpSocketOptions:UdpSocketOptions):Promise<UdpSocket>;
+	/**
+		Creates a bound, connected UDP socket. If you don't specify a port number, one will be assigned
+		by the Operating System.
+		Every package will be sent to the specified address, and incoming packets are restricted to this
+		specific peer only.
+	**/
+	public static overload function udpSocket(udpSocketOptions:ConnectedUdpSocketOptions):Promise<ConnectedUdpSocket>;
 }
 
 /**
@@ -389,7 +404,7 @@ typedef ServeOptions<T> = {
 	/**
 	 * The `fetch` function receives a `Request` and it must return a `Response`, which is forwarded to the client.
 	 */
-	var fetch:EitherType<(Request) -> Null<EitherType<Response, Promise<Response>>>, (Request, Server<T>) -> Null<EitherType<Response, Promise<Response>>>>;
+	var fetch:EitherType<(Request) -> Null<EitherType<Response, Promise<Response>>>, (Request, BunHttpServer<T>) -> Null<EitherType<Response, Promise<Response>>>>;
 
 	/**
 	 * The hostname which the server will listen on. Defaults to "0.0.0.0".
@@ -447,7 +462,7 @@ typedef ServeOptions<T> = {
 /**
  * A instance of a HTTP/WebSocket server started by Bun.
 **/
-interface Server<T = Any> {
+interface BunHttpServer<T = Any> {
 	/**
 	 * Whether the server was started in development mode or not.
 	**/
@@ -512,7 +527,7 @@ typedef WebSocketHandler<T> = {
  * @return ResultPromise<Response, FetchError>
 **/
 @:native("fetchSafe") function fetch(url:String, ?init:js.html.RequestInit):ResultPromise<Response, FetchError> {
-	return fetchRaw(url, init).then(v -> Ok(v), err -> Error(FailedToConnect(err)));
+	return fetchRaw(url, init).then(v -> Ok(v), err -> Result.Error(FailedToConnect(err)));
 };
 
 /**
@@ -524,9 +539,9 @@ typedef WebSocketHandler<T> = {
 **/
 function fetchJson(url:String, ?init:js.html.RequestInit):ResultPromise<Any, FetchError> {
 	function parseRawResponse(rawResponse:Response) {
-		return rawResponse.json().then(obj -> Ok(obj), err -> Error(JsonParseError(err)));
+		return rawResponse.json().then(obj -> Ok(obj), err -> Result.Error(JsonParseError(err)));
 	}
-	return fetchRaw(url, init).then(parseRawResponse, err -> Error(FailedToConnect(err)));
+	return fetchRaw(url, init).then(parseRawResponse, err -> Result.Error(FailedToConnect(err)));
 };
 
 /**
