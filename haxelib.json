@@ -4,9 +4,9 @@
     "license": "MIT",
     "tags": ["javascript", "server", "extern", "http", "web"],
     "description": "Experimental externs for Bun, a JavaScript runtime.",
-    "version": "0.1.5",
+    "version": "0.1.6",
     "classPath": "src/",
-    "releasenote": "Add UDP client/server support",
+    "releasenote": "Add Redis client support",
     "contributors": ["gravityWall"],
     "dependencies": { "result": "", "result-tools": "", "option-tools": "", "datetime": "", "jsasync": "" }
 }
