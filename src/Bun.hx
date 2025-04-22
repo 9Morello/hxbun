@@ -1,10 +1,12 @@
+
 import helpers.EitherOf.EitherOf3;
 import sys.net.UdpSocket;
 import js.Syntax;
 import result.Result;
 import haxe.io.BytesData;
 import bun.BunFile;
-import bun.Subprocess;
+import bun.processes.ChildProcess;
+import bun.processes.SyncChildProcess;
 import js.lib.ArrayBufferView;
 import js.lib.Error;
 import js.html.Request;
@@ -157,9 +159,47 @@ import js.lib.Promise;
 	/**
 	 * Synchronously spawns a subprocess. Receives an array of commands, and the first element will be resolved to an absolute executable path. It must be a file.
 	 * @param commands 
-	 * @return Subprocess
+	 * @return SyncSubprocess
 	**/
-	public static function spawnSync(commands:Array<String>):Subprocess;
+	public static function spawnSync(commands:Array<String>, ?options:bun.processes.SpawnOptions):SyncChildProcess;
+
+	/**
+	 * Spawns a subprocess asynchronously. The first element of the commands array will be resolved
+	 * to an absolute executable path. It must be a file.
+	 * 
+	 * Example:
+	 * ```haxe
+	 * // Using the simple API with command array
+	 * final proc = Bun.spawn(["echo", "hello world"]);
+	 * final output = await new js.html.Response(proc.stdout).text();
+	 * trace(output); // "hello world"
+	 * 
+	 * // Using IPC to communicate between processes
+	 * final child = Bun.spawn(["bun", "child.ts"], {
+	 *   ipc: (message, childProc) -> {
+	 *     trace('Message from child: $message');
+	 *     childProc.send("Hello from parent");
+	 *   }
+	 * });
+	 * 
+	 * child.send("Start working"); // Send message to child
+	 * ```
+	 * 
+	 * Child processes can communicate back using:
+	 * ```haxe
+	 * // In the child process
+	 * process.send("Hello from child");
+	 * 
+	 * process.on("message", (message) -> {
+	 *   trace('Message from parent: $message');
+	 * });
+	 * ```
+	 * 
+	 * @param commands Array of command and arguments to execute
+	 * @param options Optional spawn configuration
+	 * @return Subprocess An asynchronous subprocess object
+	 **/
+	public static overload function spawn(commands:Array<String>, ?options:bun.processes.SpawnOptions):ChildProcess;
 
 	/**
 	 * Starts a HTTP(S) server.
@@ -210,7 +250,7 @@ import js.lib.Promise;
 	 * Starts a HTTP server.
 	 * 
 	 * This function's behavior is non-blocking, but the program will only close after all server instances are stopped.
-	 * @param fetch A function that receives a `Request`, and returns either a `Response` or a `Promise<Response>`.
+	 * @param fetch A function that receives a `Request` and returns either a `Response` or a `Promise<Response>`.
 	 * @return Server
 	**/
 	overload public static inline function serve<T:Any>(fetch:(Request) -> EitherType<Response, Promise<Response>>):BunHttpServer {
