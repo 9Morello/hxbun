@@ -280,7 +280,8 @@ import js.node.Buffer;
 	 * 
 	 * This function's behavior is non-blocking, but the program will only close after all server instances are stopped.
 	 * @param options An object describing how the server should operate. 
-	 * It must at least include a `fetch` handler, which receives a `Request` returns a `Response` or a `Promise<Response>`.
+	 * It may include a `fetch` handler, which receives a `Request` returns a `Response` or a `Promise<Response>`.
+	 * For better route handling, you can use the `routes` field to define static routes or method-specific handlers.
 	 * @return Server
 	**/
 	overload public static inline function serve<T:Any>(options:ServeOptions<T>):BunHttpServer<T> {
@@ -660,7 +661,7 @@ typedef ServeOptions<T> = {
 	/**
 	 * The `fetch` function receives a `Request` and it must return a `Response`, which is forwarded to the client.
 	 **/
-	var fetch:EitherType<(Request) -> Null<EitherType<Response, Promise<Response>>>,
+	var ?fetch:EitherType<(Request) -> Null<EitherType<Response, Promise<Response>>>,
 		(Request, BunHttpServer<T>) -> Null<EitherType<Response, Promise<Response>>>>;
 
 	/**

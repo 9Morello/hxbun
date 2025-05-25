@@ -4,9 +4,9 @@
     "license": "MIT",
     "tags": ["javascript", "server", "extern", "http", "web"],
     "description": "Experimental externs for Bun, a JavaScript runtime.",
-    "version": "0.2.0",
+    "version": "0.2.1",
     "classPath": "src/",
-    "releasenote": "Add randomUUIDv7 function support with multiple encoding options (hex, base64, base64url, buffer)",
+    "releasenote": "Mark `fetch` property as optional in `ServeOptions`",
     "contributors": ["gravityWall"],
     "dependencies": { "result": "", "result-tools": "", "option-tools": "", "datetime": "", "jsasync": "" }
 }
